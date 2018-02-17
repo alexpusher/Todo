@@ -3901,6 +3901,7 @@ process.umask = function() { return 0; };
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components__ = __webpack_require__(336);
 //
 //
 //
@@ -3931,51 +3932,74 @@ process.umask = function() { return 0; };
 //
 //
 //
+
 
 const $ = __webpack_require__(337);
-  /* harmony default export */ __webpack_exports__["a"] = ({
-      data(){
-          return {
-              inputTask: '',
-              tasks: []
-          };
-      },
-      mounted(){
-          //alert(123);
-      },
-      methods:{
-        // Add new task
-        addTask(){
-          if(this.inputTask.length <= 0) return;
-          let task = {
-            text: this.inputTask,
-            status: 1,
-            isEdit: false
-          };
-          this.tasks.push(task);
-          this.inputTask = '';
-        },
-        deleteTask(ev){
-          let item = $(ev.currentTarget).parent();
-          this.$delete(this.tasks,item.attr('data-task-id'));
-        },
-        editTask(ev){
-          let item = $(ev.currentTarget).parent();
-          this.tasks[item.attr('data-task-id')].isEdit = true;
-          //this.tasks[item.attr('data-task-id')].isEdit = true;
+/* harmony default export */ __webpack_exports__["a"] = ({
+    data(){
+        return {
+            inputTask: '',
+            tasks: __WEBPACK_IMPORTED_MODULE_0__components__["a" /* TodoStorage */].getTasks()
+        };
+    },
+    mounted(){
+    },
+    methods:{
+      // Add new task
+      addTask(){
+        if(this.inputTask.length <= 0) return;
+        let task = {
+          text: this.inputTask,
+          status: 1,
+          isEdit: false
+        };
+        this.tasks.push(task);
+        this.inputTask = '';
+        this.sortTask();
 
+      },
+      deleteTask(ev){
+        let item = $(ev.currentTarget).parent();
+        this.$delete(this.tasks,item.attr('data-task-id'));
+        this.sortTask();
+      },
+      editTask(ev){
+        let item = $(ev.currentTarget).parent();
+        this.tasks[item.attr('data-task-id')].isEdit = true;
+      },
+      closeEdit(ev){
+        let item = $(ev.currentTarget).parent();
+        if(this.tasks[item.attr('data-task-id')].text.length <= 0) return;
+        this.$set(this.tasks[item.attr('data-task-id')], 'isEdit', false);
+        this.sortTask();
+        //this.tasks[item.attr('data-task-id')].isEdit = false;
+      },
+      closeTask(ev){
+        let item = $(ev.currentTarget).parent();
+        this.tasks[item.attr('data-task-id')].status = 2;
+      },
+      sortTask(){
+        this.tasks.sort(function (a, b) {
 
-        },
-        closeEdit(ev){
-          let item = $(ev.currentTarget).parent();
-          this.tasks[item.attr('data-task-id')].isEdit = false;
-        },
-        closeTask(ev){
-          let item = $(ev.currentTarget).parent();
-          //this.tasks[item.attr('data-task-id')].isEdit = false;
-        }
+          if (a.text > b.text) {
+            return 1;
+          }
+          if (a.text < b.text) {
+            return -1;
+          }
+          return 0;
+        });
       }
-  });
+    },
+    watch: {
+      tasks:{
+        handler(){
+          __WEBPACK_IMPORTED_MODULE_0__components__["a" /* TodoStorage */].saveTasks(this.tasks);
+        },
+        deep: true
+      }
+    }
+});
 
 
 
@@ -20399,7 +20423,7 @@ exports.clearImmediate = (typeof self !== "undefined" && self.clearImmediate) ||
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__node_modules_vue_loader_lib_selector_type_script_index_0_Home_vue__ = __webpack_require__(126);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_5216e98a_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Home_vue__ = __webpack_require__(336);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_5216e98a_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Home_vue__ = __webpack_require__(338);
 var disposed = false
 var normalizeComponent = __webpack_require__(335)
 /* script */
@@ -20558,158 +20582,29 @@ module.exports = function normalizeComponent (
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c("section", { staticClass: "wrapper" }, [
-    _vm._m(0),
-    _vm._v(" "),
-    _c("div", { staticClass: "app" }, [
-      _c("div", [
-        _c("input", {
-          directives: [
-            {
-              name: "model",
-              rawName: "v-model",
-              value: _vm.inputTask,
-              expression: "inputTask"
-            }
-          ],
-          attrs: { type: "text", placeholder: "Input task" },
-          domProps: { value: _vm.inputTask },
-          on: {
-            keyup: function($event) {
-              if (
-                !("button" in $event) &&
-                _vm._k($event.keyCode, "enter", 13, $event.key)
-              ) {
-                return null
-              }
-              _vm.addTask()
-            },
-            input: function($event) {
-              if ($event.target.composing) {
-                return
-              }
-              _vm.inputTask = $event.target.value
-            }
-          }
-        })
-      ]),
-      _vm._v(" "),
-      _vm.tasks
-        ? _c(
-            "div",
-            { staticClass: "tasks" },
-            _vm._l(_vm.tasks, function(task, id) {
-              return _c(
-                "div",
-                { staticClass: "task", attrs: { "data-task-id": id } },
-                [
-                  task.isEdit
-                    ? _c("input", {
-                        directives: [
-                          {
-                            name: "model",
-                            rawName: "v-model",
-                            value: task.text,
-                            expression: "task.text"
-                          }
-                        ],
-                        attrs: { type: "text", placeholder: "Input task" },
-                        domProps: { value: task.text },
-                        on: {
-                          keyup: [
-                            function($event) {
-                              if (
-                                !("button" in $event) &&
-                                _vm._k($event.keyCode, "enter", 13, $event.key)
-                              ) {
-                                return null
-                              }
-                              _vm.closeEdit($event)
-                            },
-                            function($event) {
-                              if (
-                                !("button" in $event) &&
-                                _vm._k($event.keyCode, "esc", 27, $event.key)
-                              ) {
-                                return null
-                              }
-                              _vm.closeEdit($event)
-                            }
-                          ],
-                          input: function($event) {
-                            if ($event.target.composing) {
-                              return
-                            }
-                            _vm.$set(task, "text", $event.target.value)
-                          }
-                        }
-                      })
-                    : _c(
-                        "label",
-                        {
-                          on: {
-                            dblclick: function($event) {
-                              _vm.editTask($event)
-                            }
-                          }
-                        },
-                        [_vm._v(_vm._s(task.text))]
-                      ),
-                  _vm._v(" "),
-                  _c(
-                    "button",
-                    {
-                      on: {
-                        click: function($event) {
-                          _vm.closeTask($event)
-                        }
-                      }
-                    },
-                    [_vm._v("Close task")]
-                  ),
-                  _vm._v(" "),
-                  _c(
-                    "button",
-                    {
-                      on: {
-                        click: function($event) {
-                          _vm.deleteTask($event)
-                        }
-                      }
-                    },
-                    [_vm._v("Delete")]
-                  )
-                ]
-              )
-            })
-          )
-        : _vm._e()
-    ])
-  ])
-}
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "title" }, [
-      _c("h1", [_vm._v("\n        ToDo web application\n    ")])
-    ])
-  }
-]
-render._withStripped = true
-var esExports = { render: render, staticRenderFns: staticRenderFns }
-/* harmony default export */ __webpack_exports__["a"] = (esExports);
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-5216e98a", esExports)
-  }
-}
+const StorageKey = 'TodoApp';
+
+const TodoStorage = {
+	// Return saved tasks
+	getTasks(){
+		return JSON.parse(localStorage.getItem(StorageKey)) || [];
+	},
+	/*
+	* Save in storage tasks
+	* @param {array} tasks Array with tasks
+	*/
+	saveTasks(tasks){
+		if(tasks.length > 0){
+			localStorage.setItem(StorageKey, JSON.stringify(tasks));
+		}else{
+			delete localStorage[StorageKey];
+		}
+
+	}
+};
+/* harmony export (immutable) */ __webpack_exports__["a"] = TodoStorage;
+
+
 
 /***/ }),
 /* 337 */
@@ -31081,6 +30976,164 @@ if ( !noGlobal ) {
 return jQuery;
 } );
 
+
+/***/ }),
+/* 338 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("section", { staticClass: "wrapper" }, [
+    _vm._m(0),
+    _vm._v(" "),
+    _c("div", { staticClass: "app" }, [
+      _c("div", [
+        _c("input", {
+          directives: [
+            {
+              name: "model",
+              rawName: "v-model",
+              value: _vm.inputTask,
+              expression: "inputTask"
+            }
+          ],
+          attrs: { type: "text", placeholder: "Input task" },
+          domProps: { value: _vm.inputTask },
+          on: {
+            keyup: function($event) {
+              if (
+                !("button" in $event) &&
+                _vm._k($event.keyCode, "enter", 13, $event.key)
+              ) {
+                return null
+              }
+              _vm.addTask()
+            },
+            input: function($event) {
+              if ($event.target.composing) {
+                return
+              }
+              _vm.inputTask = $event.target.value
+            }
+          }
+        })
+      ]),
+      _vm._v(" "),
+      _vm.tasks
+        ? _c(
+            "div",
+            { staticClass: "tasks" },
+            _vm._l(_vm.tasks, function(task, id) {
+              return _c(
+                "div",
+                { staticClass: "task", attrs: { "data-task-id": id } },
+                [
+                  task.isEdit
+                    ? _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: task.text,
+                            expression: "task.text"
+                          }
+                        ],
+                        attrs: { type: "textarea", placeholder: "Input task" },
+                        domProps: { value: task.text },
+                        on: {
+                          keyup: [
+                            function($event) {
+                              if (
+                                !("button" in $event) &&
+                                _vm._k($event.keyCode, "enter", 13, $event.key)
+                              ) {
+                                return null
+                              }
+                              _vm.closeEdit($event)
+                            },
+                            function($event) {
+                              if (
+                                !("button" in $event) &&
+                                _vm._k($event.keyCode, "esc", 27, $event.key)
+                              ) {
+                                return null
+                              }
+                              _vm.closeEdit($event)
+                            }
+                          ],
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.$set(task, "text", $event.target.value)
+                          }
+                        }
+                      })
+                    : _c(
+                        "label",
+                        {
+                          on: {
+                            dblclick: function($event) {
+                              _vm.editTask($event)
+                            }
+                          }
+                        },
+                        [_vm._v(_vm._s(task.text))]
+                      ),
+                  _vm._v(" "),
+                  _c(
+                    "button",
+                    {
+                      on: {
+                        click: function($event) {
+                          _vm.closeTask($event)
+                        }
+                      }
+                    },
+                    [_vm._v("Close task")]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "button",
+                    {
+                      on: {
+                        click: function($event) {
+                          _vm.deleteTask($event)
+                        }
+                      }
+                    },
+                    [_vm._v("Delete")]
+                  )
+                ]
+              )
+            })
+          )
+        : _vm._e()
+    ])
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "title" }, [
+      _c("h1", [_vm._v("\n        ToDo web application\n    ")])
+    ])
+  }
+]
+render._withStripped = true
+var esExports = { render: render, staticRenderFns: staticRenderFns }
+/* harmony default export */ __webpack_exports__["a"] = (esExports);
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-5216e98a", esExports)
+  }
+}
 
 /***/ })
 /******/ ]);
