@@ -3907,15 +3907,50 @@ process.umask = function() { return 0; };
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["a"] = ({
     data(){
         return {
-            test: '123'
+            inputTask: '',
+            tasks: []
         };
     },
     mounted(){
         //alert(123);
+    },
+    methods:{
+      // Add new task
+      addTask(){
+        let task = {
+          name: this.inputTask,
+          status: 1,
+        };
+        this.tasks.push(task);
+        this.inputTask = '';
+      }
     }
 });
 
@@ -20503,9 +20538,70 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", [_vm._v("\n    " + _vm._s(_vm.test) + "\n")])
+  return _c("section", { staticClass: "wrapper" }, [
+    _vm._m(0),
+    _vm._v(" "),
+    _c("div", { staticClass: "app" }, [
+      _c("div", [
+        _c("input", {
+          directives: [
+            {
+              name: "model",
+              rawName: "v-model",
+              value: _vm.inputTask,
+              expression: "inputTask"
+            }
+          ],
+          attrs: { type: "text", placeholder: "Input task" },
+          domProps: { value: _vm.inputTask },
+          on: {
+            keyup: function($event) {
+              if (
+                !("button" in $event) &&
+                _vm._k($event.keyCode, "enter", 13, $event.key)
+              ) {
+                return null
+              }
+              _vm.addTask()
+            },
+            input: function($event) {
+              if ($event.target.composing) {
+                return
+              }
+              _vm.inputTask = $event.target.value
+            }
+          }
+        })
+      ]),
+      _vm._v(" "),
+      _vm.tasks
+        ? _c(
+            "div",
+            { staticClass: "tasks" },
+            _vm._l(_vm.tasks, function(task) {
+              return _c("div", { staticClass: "task" }, [
+                _c("label", [_vm._v(_vm._s(task.name))]),
+                _vm._v(" "),
+                _c("button", [_vm._v("Edit")]),
+                _vm._v(" "),
+                _c("button", [_vm._v("Delete")])
+              ])
+            })
+          )
+        : _vm._e()
+    ])
+  ])
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "title" }, [
+      _c("h1", [_vm._v("\n        ToDo web application\n    ")])
+    ])
+  }
+]
 render._withStripped = true
 var esExports = { render: render, staticRenderFns: staticRenderFns }
 /* harmony default export */ __webpack_exports__["a"] = (esExports);
