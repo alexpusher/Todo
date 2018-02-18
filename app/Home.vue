@@ -1,44 +1,90 @@
 <template>
     <section class="wrapper">
-      <div class="title">
-        <h1>
-            ToDo web application
-        </h1>
-      </div>
-      <div class="app">
+      <header class="title">
         <div>
-          <input type="text" placeholder="Input task" v-model="inputTask" @keyup.enter="addTask()"/>
+          <h1>
+              ToDo web application
+          </h1>
         </div>
-        <div class="tasks" v-if="tasks">
-          <div class="task" v-for="(task, id) in tasks" :data-task-id="id">
-            <input v-if="task.isEdit" v-model="task.text" @keyup.enter="closeEdit($event)" @keyup.esc="closeEdit($event)" type="textarea" placeholder="Input task"/>
-            <label v-else v-on:dblclick="editTask($event)">{{task.text}}</label>
-            <button v-on:click="closeTask($event)">Close task</button>
-            <button v-on:click="deleteTask($event)">Delete</button>
+        <div>
+          <input type="text" placeholder="Input task" class="taskInput" v-model="inputTask" @keyup.enter="addTask()"/>
+        </div>
+      </header>
+      <section class="tasks" v-show="tasks.length">
+
+          <div class="task" v-for="(task, taskId) in filteredTasks">
+
+
+            <textarea
+              v-if="task.isEdit"
+              v-model="task.text"
+              @keyup.esc="closeEdit(taskId)"
+              @blur="closeEdit(taskId)"
+              wrap="hard" name="text" class="editTask"
+              >
+            </textarea>
+            <div v-else v-on:dblclick="editTask(taskId)" class="taskText">
+              <label>{{task.text}}</label>
+            </div>
+            <div>
+                <button class="taskButtons" v-on:click="closeTask(taskId)">Close task</button>
+                <button class="taskButtons" v-on:click="deleteTask(taskId)">Delete</button>
+            </div>
+          </div>
+
+
+      </section>
+      <footer v-show="tasks.length">
+        <div class="panel" >
+          <div class="count">
+            {{ tasks.length }} task
+          </div>
+          <div>
+            <button v-on:click="setFilter('all')">
+              All
+            </button>
+            <button v-on:click="setFilter('launched')">
+              Active
+            </button>
+            <button v-on:click="setFilter('completed')">
+              Completed
+            </button>
           </div>
         </div>
-      </div>
+      </footer>
     </section>
 </template>
-/*
-* ToDo application for test
-* Some description about app
-* status can be:
-*   1 - new task
-*   2 - finished task
-*   0 - deleted task
-*/
+
+
 <script>
     import { TodoStorage } from './components';
     const $ = require('jquery');
+
     export default {
         data(){
             return {
                 inputTask: '',
-                tasks: TodoStorage.getTasks()
+                tasks: TodoStorage.getTasks(),
+                taskStatus: 'all'
             };
         },
         mounted(){
+        },
+        computed: {
+          filteredTasks(){
+
+              let tasks = [];
+              if(this.taskStatus === 'all'){
+                tasks = this.tasks;
+              }else if(this.taskStatus === 'completed'){
+                tasks = this.filterTask();
+              }else if(this.taskStatus === 'launched'){
+                tasks = this.filterTask();
+              }
+
+
+            return tasks;
+          }
         },
         methods:{
           // Add new task
@@ -46,7 +92,7 @@
             if(this.inputTask.length <= 0) return;
             let task = {
               text: this.inputTask,
-              status: 1,
+              status: 'launched',
               isEdit: false
             };
             this.tasks.push(task);
@@ -54,25 +100,24 @@
             this.sortTask();
 
           },
-          deleteTask(ev){
-            let item = $(ev.currentTarget).parent();
-            this.$delete(this.tasks,item.attr('data-task-id'));
+          deleteTask(taskId){
+            this.$delete(this.tasks, taskId);
             this.sortTask();
           },
-          editTask(ev){
-            let item = $(ev.currentTarget).parent();
-            this.tasks[item.attr('data-task-id')].isEdit = true;
+          editTask(taskId){
+            this.tasks[taskId].isEdit = true;
           },
-          closeEdit(ev){
-            let item = $(ev.currentTarget).parent();
-            if(this.tasks[item.attr('data-task-id')].text.length <= 0) return;
-            this.$set(this.tasks[item.attr('data-task-id')], 'isEdit', false);
+          closeEdit(taskId){
+            console.log(this.tasks[taskId].text.length);
+            if(this.tasks[taskId].text.length <= 0){
+              this.deleteTask(taskId);
+              return;
+            }
+            this.tasks[taskId].isEdit = false;
             this.sortTask();
-            //this.tasks[item.attr('data-task-id')].isEdit = false;
           },
-          closeTask(ev){
-            let item = $(ev.currentTarget).parent();
-            this.tasks[item.attr('data-task-id')].status = 2;
+          closeTask(taskId){
+            this.tasks[taskId].status = 'completed';
           },
           sortTask(){
             this.tasks.sort(function (a, b) {
@@ -84,6 +129,17 @@
                 return -1;
               }
               return 0;
+            });
+          },
+          // Set status for filter
+          setFilter(status){
+            this.taskStatus = status;
+          },
+          // Filter task by current task status
+          filterTask(){
+            let self = this;
+            return self.tasks.filter(function (task) {
+              return task.status === self.taskStatus
             });
           }
         },

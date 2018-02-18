@@ -3932,17 +3932,63 @@ process.umask = function() { return 0; };
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 const $ = __webpack_require__(337);
+
 /* harmony default export */ __webpack_exports__["a"] = ({
     data(){
         return {
             inputTask: '',
-            tasks: __WEBPACK_IMPORTED_MODULE_0__components__["a" /* TodoStorage */].getTasks()
+            tasks: __WEBPACK_IMPORTED_MODULE_0__components__["a" /* TodoStorage */].getTasks(),
+            taskStatus: 'all'
         };
     },
     mounted(){
+    },
+    computed: {
+      filteredTasks(){
+
+          let tasks = [];
+          if(this.taskStatus === 'all'){
+            tasks = this.tasks;
+          }else if(this.taskStatus === 'completed'){
+            tasks = this.filterTask();
+          }else if(this.taskStatus === 'launched'){
+            tasks = this.filterTask();
+          }
+
+
+        return tasks;
+      }
     },
     methods:{
       // Add new task
@@ -3950,7 +3996,7 @@ const $ = __webpack_require__(337);
         if(this.inputTask.length <= 0) return;
         let task = {
           text: this.inputTask,
-          status: 1,
+          status: 'launched',
           isEdit: false
         };
         this.tasks.push(task);
@@ -3958,25 +4004,24 @@ const $ = __webpack_require__(337);
         this.sortTask();
 
       },
-      deleteTask(ev){
-        let item = $(ev.currentTarget).parent();
-        this.$delete(this.tasks,item.attr('data-task-id'));
+      deleteTask(taskId){
+        this.$delete(this.tasks, taskId);
         this.sortTask();
       },
-      editTask(ev){
-        let item = $(ev.currentTarget).parent();
-        this.tasks[item.attr('data-task-id')].isEdit = true;
+      editTask(taskId){
+        this.tasks[taskId].isEdit = true;
       },
-      closeEdit(ev){
-        let item = $(ev.currentTarget).parent();
-        if(this.tasks[item.attr('data-task-id')].text.length <= 0) return;
-        this.$set(this.tasks[item.attr('data-task-id')], 'isEdit', false);
+      closeEdit(taskId){
+        console.log(this.tasks[taskId].text.length);
+        if(this.tasks[taskId].text.length <= 0){
+          this.deleteTask(taskId);
+          return;
+        }
+        this.tasks[taskId].isEdit = false;
         this.sortTask();
-        //this.tasks[item.attr('data-task-id')].isEdit = false;
       },
-      closeTask(ev){
-        let item = $(ev.currentTarget).parent();
-        this.tasks[item.attr('data-task-id')].status = 2;
+      closeTask(taskId){
+        this.tasks[taskId].status = 'completed';
       },
       sortTask(){
         this.tasks.sort(function (a, b) {
@@ -3988,6 +4033,17 @@ const $ = __webpack_require__(337);
             return -1;
           }
           return 0;
+        });
+      },
+      // Set status for filter
+      setFilter(status){
+        this.taskStatus = status;
+      },
+      // Filter task by current task status
+      filterTask(){
+        let self = this;
+        return self.tasks.filter(function (task) {
+          return task.status === self.taskStatus
         });
       }
     },
@@ -30987,9 +31043,9 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("section", { staticClass: "wrapper" }, [
-    _vm._m(0),
-    _vm._v(" "),
-    _c("div", { staticClass: "app" }, [
+    _c("header", { staticClass: "title" }, [
+      _vm._m(0),
+      _vm._v(" "),
       _c("div", [
         _c("input", {
           directives: [
@@ -31000,6 +31056,7 @@ var render = function() {
               expression: "inputTask"
             }
           ],
+          staticClass: "taskInput",
           attrs: { type: "text", placeholder: "Input task" },
           domProps: { value: _vm.inputTask },
           on: {
@@ -31020,99 +31077,160 @@ var render = function() {
             }
           }
         })
-      ]),
-      _vm._v(" "),
-      _vm.tasks
-        ? _c(
-            "div",
-            { staticClass: "tasks" },
-            _vm._l(_vm.tasks, function(task, id) {
-              return _c(
+      ])
+    ]),
+    _vm._v(" "),
+    _c(
+      "section",
+      {
+        directives: [
+          {
+            name: "show",
+            rawName: "v-show",
+            value: _vm.tasks.length,
+            expression: "tasks.length"
+          }
+        ],
+        staticClass: "tasks"
+      },
+      _vm._l(_vm.filteredTasks, function(task, taskId) {
+        return _c("div", { staticClass: "task" }, [
+          task.isEdit
+            ? _c("textarea", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: task.text,
+                    expression: "task.text"
+                  }
+                ],
+                staticClass: "editTask",
+                attrs: { wrap: "hard", name: "text" },
+                domProps: { value: task.text },
+                on: {
+                  keyup: function($event) {
+                    if (
+                      !("button" in $event) &&
+                      _vm._k($event.keyCode, "esc", 27, $event.key)
+                    ) {
+                      return null
+                    }
+                    _vm.closeEdit(taskId)
+                  },
+                  blur: function($event) {
+                    _vm.closeEdit(taskId)
+                  },
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.$set(task, "text", $event.target.value)
+                  }
+                }
+              })
+            : _c(
                 "div",
-                { staticClass: "task", attrs: { "data-task-id": id } },
-                [
-                  task.isEdit
-                    ? _c("input", {
-                        directives: [
-                          {
-                            name: "model",
-                            rawName: "v-model",
-                            value: task.text,
-                            expression: "task.text"
-                          }
-                        ],
-                        attrs: { type: "textarea", placeholder: "Input task" },
-                        domProps: { value: task.text },
-                        on: {
-                          keyup: [
-                            function($event) {
-                              if (
-                                !("button" in $event) &&
-                                _vm._k($event.keyCode, "enter", 13, $event.key)
-                              ) {
-                                return null
-                              }
-                              _vm.closeEdit($event)
-                            },
-                            function($event) {
-                              if (
-                                !("button" in $event) &&
-                                _vm._k($event.keyCode, "esc", 27, $event.key)
-                              ) {
-                                return null
-                              }
-                              _vm.closeEdit($event)
-                            }
-                          ],
-                          input: function($event) {
-                            if ($event.target.composing) {
-                              return
-                            }
-                            _vm.$set(task, "text", $event.target.value)
-                          }
-                        }
-                      })
-                    : _c(
-                        "label",
-                        {
-                          on: {
-                            dblclick: function($event) {
-                              _vm.editTask($event)
-                            }
-                          }
-                        },
-                        [_vm._v(_vm._s(task.text))]
-                      ),
-                  _vm._v(" "),
-                  _c(
-                    "button",
-                    {
-                      on: {
-                        click: function($event) {
-                          _vm.closeTask($event)
-                        }
-                      }
-                    },
-                    [_vm._v("Close task")]
-                  ),
-                  _vm._v(" "),
-                  _c(
-                    "button",
-                    {
-                      on: {
-                        click: function($event) {
-                          _vm.deleteTask($event)
-                        }
-                      }
-                    },
-                    [_vm._v("Delete")]
-                  )
-                ]
-              )
-            })
-          )
-        : _vm._e()
-    ])
+                {
+                  staticClass: "taskText",
+                  on: {
+                    dblclick: function($event) {
+                      _vm.editTask(taskId)
+                    }
+                  }
+                },
+                [_c("label", [_vm._v(_vm._s(task.text))])]
+              ),
+          _vm._v(" "),
+          _c("div", [
+            _c(
+              "button",
+              {
+                staticClass: "taskButtons",
+                on: {
+                  click: function($event) {
+                    _vm.closeTask(taskId)
+                  }
+                }
+              },
+              [_vm._v("Close task")]
+            ),
+            _vm._v(" "),
+            _c(
+              "button",
+              {
+                staticClass: "taskButtons",
+                on: {
+                  click: function($event) {
+                    _vm.deleteTask(taskId)
+                  }
+                }
+              },
+              [_vm._v("Delete")]
+            )
+          ])
+        ])
+      })
+    ),
+    _vm._v(" "),
+    _c(
+      "footer",
+      {
+        directives: [
+          {
+            name: "show",
+            rawName: "v-show",
+            value: _vm.tasks.length,
+            expression: "tasks.length"
+          }
+        ]
+      },
+      [
+        _c("div", { staticClass: "panel" }, [
+          _c("div", { staticClass: "count" }, [
+            _vm._v("\n        " + _vm._s(_vm.tasks.length) + " task\n      ")
+          ]),
+          _vm._v(" "),
+          _c("div", [
+            _c(
+              "button",
+              {
+                on: {
+                  click: function($event) {
+                    _vm.setFilter("all")
+                  }
+                }
+              },
+              [_vm._v("\n          All\n        ")]
+            ),
+            _vm._v(" "),
+            _c(
+              "button",
+              {
+                on: {
+                  click: function($event) {
+                    _vm.setFilter("launched")
+                  }
+                }
+              },
+              [_vm._v("\n          Active\n        ")]
+            ),
+            _vm._v(" "),
+            _c(
+              "button",
+              {
+                on: {
+                  click: function($event) {
+                    _vm.setFilter("completed")
+                  }
+                }
+              },
+              [_vm._v("\n          Completed\n        ")]
+            )
+          ])
+        ])
+      ]
+    )
   ])
 }
 var staticRenderFns = [
@@ -31120,8 +31238,8 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "title" }, [
-      _c("h1", [_vm._v("\n        ToDo web application\n    ")])
+    return _c("div", [
+      _c("h1", [_vm._v("\n          ToDo web application\n      ")])
     ])
   }
 ]
