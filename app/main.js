@@ -1,9 +1,9 @@
 import Vue from 'vue';
-import Home from './Home.vue';
+import Todo from './Todo.vue';
 
 
 
 export default new Vue({
     el:'#app',
-    render: h => h(Home)
+    render: h => h(Todo)
 });

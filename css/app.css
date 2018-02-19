@@ -1,41 +1,121 @@
+* {
+	box-sizing: border-box;
+}
 .wrapper{
 	display: -webkit-flex;
 	display: flex;
 	-webkit-flex-direction: column;
 	flex-direction: column;
 	align-items: center;
+	/*font-family: "Comic Sans MS", "Comic Sans", cursive;*/
 }
 .tasks{
-    padding: 20px;
+    padding: 20px 25px 20px 25px;
 	max-height: 650px;
+
     overflow: auto;
+	width: 265px;
 }
 .task{
-	margin: 10px;
-    width: 200px;
-    height: 100px;
+	width:100%;
+	position: relative;
+    height: 130px;
+	margin-bottom: 20px;
     border: 1px silver solid;
 }
 .taskInput{
 	height: 35px;
-    width: 225px;
+	width: 100%;
+	padding: 5px;
+	font-size: 20px;
+	margin-bottom:20px;
 }
 .taskButtons{
 	width: 49%;
+	font-size: 12px;
+	padding: 0;
 }
 .taskText {
-    height: 79px;
-	word-break: break-all;
-    word-wrap: break-word;
-	max-height: 78px;
     overflow: auto;
+	min-height: 108px;
+	padding-top: 10px;
+	padding-left:5px;
+	padding-right:5px;
+	max-height: 108px;
+	word-break: break-all;
 }
 .editTask {
     margin: 0px;
-    width: 195px;
-    height: 68px;    
-	max-width: 195px;
-    max-height: 68px;
-	min-width: 195px;
-    min-height: 68px;
+	padding: 3px;
+	width:100%;
+	height: 110px;
+	resize: none;
+}
+.taskDate{
+	height: 20px;
+	padding-left:5px;
+	display: flex;
+	align-items: center;
+	border-bottom: 1px silver solid;
+	font-size: 14px;
+}
+
+.btns {
+	position: absolute;
+	right: 0;
+	top: 0;
+	display: flex;
+	justify-content: flex-end;
+	width: 35%;
+	height:20px;
+}
+.taskButtons_delete {
+	margin-left: 3px;
+}
+.taskButtons_delete:after {
+	content: 'x';
+	display: block;
+	color: red;
+}
+.btn-wrapper {
+	margin-top: 10px;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+.btn {
+	border: none;
+	background: none;
+	font-size: 10px;
+	height: 30px;
+	padding: 0;
+	line-height: 1;
+	margin: 0;
+	text-transform: uppercase;
+	color: #fff;
+	width: calc(100%/3);
+	cursor: pointer;
+}
+.btn:hover {
+	opacity: 0.8;
+}
+.btn:focus {
+	outline: 0;
+}
+.btn_all {
+	background: orange;
+}
+.btn_active {
+	background: blue;
+}
+.btn_done {
+	background: green;
+}
+.btn_delete_all {
+	width: 100%;
+	background: red;
+}
+.completed {
+	text-decoration: line-through;
+	opacity: 0.5;
 }

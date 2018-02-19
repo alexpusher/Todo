@@ -3961,101 +3961,112 @@ process.umask = function() { return 0; };
 //
 //
 
+    
+    const $ = __webpack_require__(337);
 
-const $ = __webpack_require__(337);
-
-/* harmony default export */ __webpack_exports__["a"] = ({
-    data(){
-        return {
-            inputTask: '',
-            tasks: __WEBPACK_IMPORTED_MODULE_0__components__["a" /* TodoStorage */].getTasks(),
-            taskStatus: 'all'
-        };
-    },
-    mounted(){
-    },
-    computed: {
-      filteredTasks(){
-
-          let tasks = [];
-          if(this.taskStatus === 'all'){
-            tasks = this.tasks;
-          }else if(this.taskStatus === 'completed'){
-            tasks = this.filterTask();
-          }else if(this.taskStatus === 'launched'){
-            tasks = this.filterTask();
-          }
-
-
-        return tasks;
-      }
-    },
-    methods:{
-      // Add new task
-      addTask(){
-        if(this.inputTask.length <= 0) return;
-        let task = {
-          text: this.inputTask,
-          status: 'launched',
-          isEdit: false
-        };
-        this.tasks.push(task);
-        this.inputTask = '';
-        this.sortTask();
-
-      },
-      deleteTask(taskId){
-        this.$delete(this.tasks, taskId);
-        this.sortTask();
-      },
-      editTask(taskId){
-        this.tasks[taskId].isEdit = true;
-      },
-      closeEdit(taskId){
-        console.log(this.tasks[taskId].text.length);
-        if(this.tasks[taskId].text.length <= 0){
-          this.deleteTask(taskId);
-          return;
-        }
-        this.tasks[taskId].isEdit = false;
-        this.sortTask();
-      },
-      closeTask(taskId){
-        this.tasks[taskId].status = 'completed';
-      },
-      sortTask(){
-        this.tasks.sort(function (a, b) {
-
-          if (a.text > b.text) {
-            return 1;
-          }
-          if (a.text < b.text) {
-            return -1;
-          }
-          return 0;
-        });
-      },
-      // Set status for filter
-      setFilter(status){
-        this.taskStatus = status;
-      },
-      // Filter task by current task status
-      filterTask(){
-        let self = this;
-        return self.tasks.filter(function (task) {
-          return task.status === self.taskStatus
-        });
-      }
-    },
-    watch: {
-      tasks:{
-        handler(){
-          __WEBPACK_IMPORTED_MODULE_0__components__["a" /* TodoStorage */].saveTasks(this.tasks);
+    /* harmony default export */ __webpack_exports__["a"] = ({
+        data(){
+            return {
+                inputTask: '',
+                tasks: __WEBPACK_IMPORTED_MODULE_0__components__["a" /* TodoStorage */].getTasks(),
+                taskStatus: 'all'
+            };
         },
-        deep: true
-      }
-    }
-});
+        mounted(){
+        },
+        computed: {
+          filteredTasks(){
+
+              let tasks = [];
+              if(this.taskStatus === 'all'){
+                tasks = this.tasks;
+              }else if(this.taskStatus === 'completed'){
+                tasks = this.filterTask();
+              }else if(this.taskStatus === 'launched'){
+                tasks = this.filterTask();
+              }
+
+
+            return tasks;
+          },
+		  // Check when need to add 's' symbol
+		  countItems(){
+			let taskWord = this.filteredTasks.length === 1 ? ' task' : ' tasks'
+			return this.filteredTasks.length + taskWord;
+		  }
+        },
+        methods:{
+          // Add new task
+          addTask(){
+            if(this.inputTask.length <= 0) return;
+            let task = {
+              text: this.inputTask,
+              status: 'launched',
+              isEdit: false,
+              date: new Date().toString().split(' ').splice(1,4).join(' ')
+
+            };
+            this.tasks.push(task);
+            this.inputTask = '';
+            this.sortTask();
+
+          },
+          deleteTask(taskId){
+            this.$delete(this.tasks, taskId);
+            this.sortTask();
+          },
+		  deleteAll(){
+			this.tasks = [];
+		  },
+          editTask(taskId){
+            this.tasks[taskId].isEdit = true;
+          },
+          closeEdit(taskId){
+            console.log(this.tasks[taskId].text.length);
+            if(this.tasks[taskId].text.length <= 0){
+              this.deleteTask(taskId);
+              return;
+            }
+            this.tasks[taskId].isEdit = false;
+            this.sortTask();
+          },
+          closeTask(taskId){
+            this.tasks[taskId].status = 'completed';
+          },
+          sortTask(){
+            this.tasks.sort(function (a, b) {
+
+              if (a.text > b.text) {
+                return 1;
+              }
+              if (a.text < b.text) {
+                return -1;
+              }
+              return 0;
+            });
+          },
+          // Set status for filter
+          setFilter(status){
+            this.taskStatus = status;
+          },
+          // Filter task by current task status
+          filterTask(status){
+            let self = this;
+			self.taskStatus = status || self.taskStatus;
+            return self.tasks.filter(function (task) {
+              return task.status === self.taskStatus
+            });
+          }
+        },
+        watch: {
+          tasks:{
+            handler(){
+              __WEBPACK_IMPORTED_MODULE_0__components__["a" /* TodoStorage */].saveTasks(this.tasks);
+            },
+            deep: true
+          }
+        }
+    });
 
 
 
@@ -9381,7 +9392,7 @@ module.exports = function (regExp, replace) {
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue__ = __webpack_require__(331);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Home_vue__ = __webpack_require__(334);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__Todo_vue__ = __webpack_require__(334);
 
 
 
@@ -9389,7 +9400,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 /* harmony default export */ __webpack_exports__["default"] = (new __WEBPACK_IMPORTED_MODULE_0_vue___default.a({
     el:'#app',
-    render: h => h(__WEBPACK_IMPORTED_MODULE_1__Home_vue__["a" /* default */])
+    render: h => h(__WEBPACK_IMPORTED_MODULE_1__Todo_vue__["a" /* default */])
 }));
 
 
@@ -20477,9 +20488,9 @@ exports.clearImmediate = (typeof self !== "undefined" && self.clearImmediate) ||
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__node_modules_vue_loader_lib_selector_type_script_index_0_Home_vue__ = __webpack_require__(126);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__node_modules_vue_loader_lib_selector_type_script_index_0_Todo_vue__ = __webpack_require__(126);
 /* unused harmony namespace reexport */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_5216e98a_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Home_vue__ = __webpack_require__(338);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_b29819bc_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Todo_vue__ = __webpack_require__(338);
 var disposed = false
 var normalizeComponent = __webpack_require__(335)
 /* script */
@@ -20496,14 +20507,14 @@ var __vue_scopeId__ = null
 /* moduleIdentifier (server only) */
 var __vue_module_identifier__ = null
 var Component = normalizeComponent(
-  __WEBPACK_IMPORTED_MODULE_0__node_modules_vue_loader_lib_selector_type_script_index_0_Home_vue__["a" /* default */],
-  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_5216e98a_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Home_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_0__node_modules_vue_loader_lib_selector_type_script_index_0_Todo_vue__["a" /* default */],
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_b29819bc_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_Todo_vue__["a" /* default */],
   __vue_template_functional__,
   __vue_styles__,
   __vue_scopeId__,
   __vue_module_identifier__
 )
-Component.options.__file = "app/Home.vue"
+Component.options.__file = "app/Todo.vue"
 
 /* hot reload */
 if (false) {(function () {
@@ -20512,9 +20523,9 @@ if (false) {(function () {
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-5216e98a", Component.options)
+    hotAPI.createRecord("data-v-b29819bc", Component.options)
   } else {
-    hotAPI.reload("data-v-5216e98a", Component.options)
+    hotAPI.reload("data-v-b29819bc", Component.options)
   }
   module.hot.dispose(function (data) {
     disposed = true
@@ -31044,212 +31055,255 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c("section", { staticClass: "wrapper" }, [
     _c("header", { staticClass: "title" }, [
-      _vm._m(0),
+      _c("h1", [_vm._v("ToDo web application")]),
       _vm._v(" "),
-      _c("div", [
-        _c("input", {
-          directives: [
-            {
-              name: "model",
-              rawName: "v-model",
-              value: _vm.inputTask,
-              expression: "inputTask"
-            }
-          ],
-          staticClass: "taskInput",
-          attrs: { type: "text", placeholder: "Input task" },
-          domProps: { value: _vm.inputTask },
-          on: {
-            keyup: function($event) {
-              if (
-                !("button" in $event) &&
-                _vm._k($event.keyCode, "enter", 13, $event.key)
-              ) {
-                return null
-              }
-              _vm.addTask()
-            },
-            input: function($event) {
-              if ($event.target.composing) {
-                return
-              }
-              _vm.inputTask = $event.target.value
-            }
-          }
-        })
-      ])
-    ]),
-    _vm._v(" "),
-    _c(
-      "section",
-      {
+      _c("input", {
         directives: [
           {
-            name: "show",
-            rawName: "v-show",
-            value: _vm.tasks.length,
-            expression: "tasks.length"
+            name: "model",
+            rawName: "v-model",
+            value: _vm.inputTask,
+            expression: "inputTask"
           }
         ],
-        staticClass: "tasks"
-      },
-      _vm._l(_vm.filteredTasks, function(task, taskId) {
-        return _c("div", { staticClass: "task" }, [
-          task.isEdit
-            ? _c("textarea", {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: task.text,
-                    expression: "task.text"
-                  }
-                ],
-                staticClass: "editTask",
-                attrs: { wrap: "hard", name: "text" },
-                domProps: { value: task.text },
-                on: {
-                  keyup: function($event) {
-                    if (
-                      !("button" in $event) &&
-                      _vm._k($event.keyCode, "esc", 27, $event.key)
-                    ) {
-                      return null
-                    }
-                    _vm.closeEdit(taskId)
-                  },
-                  blur: function($event) {
-                    _vm.closeEdit(taskId)
-                  },
-                  input: function($event) {
-                    if ($event.target.composing) {
-                      return
-                    }
-                    _vm.$set(task, "text", $event.target.value)
-                  }
-                }
-              })
-            : _c(
-                "div",
-                {
-                  staticClass: "taskText",
-                  on: {
-                    dblclick: function($event) {
-                      _vm.editTask(taskId)
-                    }
-                  }
-                },
-                [_c("label", [_vm._v(_vm._s(task.text))])]
-              ),
-          _vm._v(" "),
-          _c("div", [
-            _c(
-              "button",
-              {
-                staticClass: "taskButtons",
-                on: {
-                  click: function($event) {
-                    _vm.closeTask(taskId)
-                  }
-                }
-              },
-              [_vm._v("Close task")]
-            ),
+        staticClass: "taskInput",
+        attrs: { type: "text", placeholder: "Input task" },
+        domProps: { value: _vm.inputTask },
+        on: {
+          keyup: function($event) {
+            if (
+              !("button" in $event) &&
+              _vm._k($event.keyCode, "enter", 13, $event.key)
+            ) {
+              return null
+            }
+            _vm.addTask()
+          },
+          input: function($event) {
+            if ($event.target.composing) {
+              return
+            }
+            _vm.inputTask = $event.target.value
+          }
+        }
+      })
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "tasks" }, [
+      _c(
+        "div",
+        {
+          directives: [
+            {
+              name: "show",
+              rawName: "v-show",
+              value: _vm.tasks.length,
+              expression: "tasks.length"
+            }
+          ]
+        },
+        _vm._l(_vm.filteredTasks, function(task, taskId) {
+          return _c("div", { staticClass: "task" }, [
+            _c("div", { staticClass: "taskDate" }, [
+              _vm._v(
+                "\n                      " +
+                  _vm._s(task.date) +
+                  "\n                  "
+              )
+            ]),
             _vm._v(" "),
-            _c(
-              "button",
-              {
-                staticClass: "taskButtons",
+            task.isEdit && task.status != "completed"
+              ? _c("textarea", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: task.text,
+                      expression: "task.text"
+                    }
+                  ],
+                  staticClass: "editTask",
+                  attrs: { wrap: "hard", name: "text" },
+                  domProps: { value: task.text },
+                  on: {
+                    keyup: function($event) {
+                      if (
+                        !("button" in $event) &&
+                        _vm._k($event.keyCode, "esc", 27, $event.key)
+                      ) {
+                        return null
+                      }
+                      _vm.closeEdit(taskId)
+                    },
+                    blur: function($event) {
+                      _vm.closeEdit(taskId)
+                    },
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(task, "text", $event.target.value)
+                    }
+                  }
+                })
+              : _c(
+                  "div",
+                  {
+                    staticClass: "taskText",
+                    class: { completed: task.status == "completed" },
+                    on: {
+                      dblclick: function($event) {
+                        _vm.editTask(taskId)
+                      }
+                    }
+                  },
+                  [
+                    _vm._v(
+                      "\n                      " +
+                        _vm._s(task.text) +
+                        "\n                  "
+                    )
+                  ]
+                ),
+            _vm._v(" "),
+            _c("div", { staticClass: "btns" }, [
+              task.status != "completed"
+                ? _c(
+                    "button",
+                    {
+                      staticClass: "taskButtons ",
+                      on: {
+                        click: function($event) {
+                          _vm.closeTask(taskId)
+                        }
+                      }
+                    },
+                    [_vm._v("Close")]
+                  )
+                : _vm._e(),
+              _vm._v(" "),
+              _c("button", {
+                staticClass: "taskButtons taskButtons_delete",
                 on: {
                   click: function($event) {
                     _vm.deleteTask(taskId)
                   }
                 }
-              },
-              [_vm._v("Delete")]
-            )
+              })
+            ])
           ])
-        ])
-      })
-    ),
-    _vm._v(" "),
-    _c(
-      "footer",
-      {
-        directives: [
-          {
-            name: "show",
-            rawName: "v-show",
-            value: _vm.tasks.length,
-            expression: "tasks.length"
-          }
+        })
+      ),
+      _vm._v(" "),
+      _c(
+        "div",
+        {
+          directives: [
+            {
+              name: "show",
+              rawName: "v-show",
+              value: _vm.tasks.length,
+              expression: "tasks.length"
+            }
+          ]
+        },
+        [
+          _c("div", { staticClass: "panel" }, [
+            _c("div", { staticClass: "count" }, [
+              _vm._v(
+                "\n                      " +
+                  _vm._s(_vm.filteredTasks.length) +
+                  " task\n                  "
+              )
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "btn-wrapper" }, [
+              _c(
+                "button",
+                {
+                  staticClass: "btn btn_all",
+                  on: {
+                    click: function($event) {
+                      _vm.setFilter("all")
+                    }
+                  }
+                },
+                [
+                  _vm._v(
+                    "\n                          All\n                      "
+                  )
+                ]
+              ),
+              _vm._v(" "),
+              _c(
+                "button",
+                {
+                  staticClass: "btn btn_active",
+                  on: {
+                    click: function($event) {
+                      _vm.setFilter("launched")
+                    }
+                  }
+                },
+                [
+                  _vm._v(
+                    "\n                          Active\n                      "
+                  )
+                ]
+              ),
+              _vm._v(" "),
+              _c(
+                "button",
+                {
+                  staticClass: "btn btn_done",
+                  on: {
+                    click: function($event) {
+                      _vm.setFilter("completed")
+                    }
+                  }
+                },
+                [
+                  _vm._v(
+                    "\n                          Completed\n                      "
+                  )
+                ]
+              )
+            ]),
+            _vm._v(" "),
+            _vm.tasks.length
+              ? _c("div", { staticClass: "btn-wrapper" }, [
+                  _c(
+                    "button",
+                    {
+                      staticClass: "btn btn_delete_all",
+                      on: {
+                        click: function($event) {
+                          _vm.deleteAll()
+                        }
+                      }
+                    },
+                    [
+                      _vm._v(
+                        "\n                          Delete all\n                      "
+                      )
+                    ]
+                  )
+                ])
+              : _vm._e()
+          ])
         ]
-      },
-      [
-        _c("div", { staticClass: "panel" }, [
-          _c("div", { staticClass: "count" }, [
-            _vm._v("\n        " + _vm._s(_vm.tasks.length) + " task\n      ")
-          ]),
-          _vm._v(" "),
-          _c("div", [
-            _c(
-              "button",
-              {
-                on: {
-                  click: function($event) {
-                    _vm.setFilter("all")
-                  }
-                }
-              },
-              [_vm._v("\n          All\n        ")]
-            ),
-            _vm._v(" "),
-            _c(
-              "button",
-              {
-                on: {
-                  click: function($event) {
-                    _vm.setFilter("launched")
-                  }
-                }
-              },
-              [_vm._v("\n          Active\n        ")]
-            ),
-            _vm._v(" "),
-            _c(
-              "button",
-              {
-                on: {
-                  click: function($event) {
-                    _vm.setFilter("completed")
-                  }
-                }
-              },
-              [_vm._v("\n          Completed\n        ")]
-            )
-          ])
-        ])
-      ]
-    )
+      )
+    ])
   ])
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", [
-      _c("h1", [_vm._v("\n          ToDo web application\n      ")])
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 var esExports = { render: render, staticRenderFns: staticRenderFns }
 /* harmony default export */ __webpack_exports__["a"] = (esExports);
 if (false) {
   module.hot.accept()
   if (module.hot.data) {
-    require("vue-hot-reload-api")      .rerender("data-v-5216e98a", esExports)
+    require("vue-hot-reload-api")      .rerender("data-v-b29819bc", esExports)
   }
 }
 

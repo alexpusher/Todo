@@ -1,57 +1,57 @@
 <template>
     <section class="wrapper">
       <header class="title">
-        <div>
-          <h1>
-              ToDo web application
-          </h1>
-        </div>
-        <div>
+          <h1>ToDo web application</h1>
+		  
           <input type="text" placeholder="Input task" class="taskInput" v-model="inputTask" @keyup.enter="addTask()"/>
-        </div>
       </header>
-      <section class="tasks" v-show="tasks.length">
-
-          <div class="task" v-for="(task, taskId) in filteredTasks">
-
-
-            <textarea
-              v-if="task.isEdit"
-              v-model="task.text"
-              @keyup.esc="closeEdit(taskId)"
-              @blur="closeEdit(taskId)"
-              wrap="hard" name="text" class="editTask"
-              >
-            </textarea>
-            <div v-else v-on:dblclick="editTask(taskId)" class="taskText">
-              <label>{{task.text}}</label>
-            </div>
-            <div>
-                <button class="taskButtons" v-on:click="closeTask(taskId)">Close task</button>
-                <button class="taskButtons" v-on:click="deleteTask(taskId)">Delete</button>
-            </div>
+      <div class="tasks">
+          <div v-show="tasks.length">
+              <div class="task" v-for="(task, taskId) in filteredTasks">
+                  <div class="taskDate">
+                      {{task.date}}
+                  </div>
+                  <textarea
+					  v-if="task.isEdit && task.status != 'completed'"
+					  v-model="task.text"
+					  @keyup.esc="closeEdit(taskId)"
+					  @blur="closeEdit(taskId)"
+					  wrap="hard" name="text" class="editTask"
+                  >
+				  </textarea>
+                  <div v-else v-on:dblclick="editTask(taskId)" :class="{completed: task.status == 'completed'}" class="taskText">
+                      {{task.text}}
+                  </div>
+                  <div class="btns">
+                      <button class="taskButtons " v-on:click="closeTask(taskId)" v-if="task.status != 'completed'">Close</button>
+                      <button class="taskButtons taskButtons_delete" v-on:click="deleteTask(taskId)"></button>
+                  </div>
+              </div>
           </div>
-
-
-      </section>
-      <footer v-show="tasks.length">
-        <div class="panel" >
-          <div class="count">
-            {{ tasks.length }} task
+          <div v-show="tasks.length">
+              <div class="panel">
+                  <div class="count">
+                      {{ filteredTasks.length }} task
+                  </div>
+                  <div class="btn-wrapper">
+                      <button class="btn btn_all" v-on:click="setFilter('all')">
+                          All
+                      </button>
+                      <button class="btn btn_active" v-on:click="setFilter('launched')">
+                          Active
+                      </button>
+                      <button class="btn btn_done" v-on:click="setFilter('completed')">
+                          Completed
+                      </button>
+                  </div>
+                  <div class="btn-wrapper" v-if="tasks.length">
+                      <button class="btn btn_delete_all" v-on:click="deleteAll()">
+                          Delete all
+                      </button>
+                  </div>
+              </div>
           </div>
-          <div>
-            <button v-on:click="setFilter('all')">
-              All
-            </button>
-            <button v-on:click="setFilter('launched')">
-              Active
-            </button>
-            <button v-on:click="setFilter('completed')">
-              Completed
-            </button>
-          </div>
-        </div>
-      </footer>
+      </div>
     </section>
 </template>
 
@@ -84,7 +84,12 @@
 
 
             return tasks;
-          }
+          },
+		  // Check when need to add 's' symbol
+		  countItems(){
+			let taskWord = this.filteredTasks.length === 1 ? ' task' : ' tasks'
+			return this.filteredTasks.length + taskWord;
+		  }
         },
         methods:{
           // Add new task
@@ -93,7 +98,9 @@
             let task = {
               text: this.inputTask,
               status: 'launched',
-              isEdit: false
+              isEdit: false,
+              date: new Date().toString().split(' ').splice(1,4).join(' ')
+
             };
             this.tasks.push(task);
             this.inputTask = '';
@@ -104,6 +111,9 @@
             this.$delete(this.tasks, taskId);
             this.sortTask();
           },
+		  deleteAll(){
+			this.tasks = [];
+		  },
           editTask(taskId){
             this.tasks[taskId].isEdit = true;
           },
@@ -136,8 +146,9 @@
             this.taskStatus = status;
           },
           // Filter task by current task status
-          filterTask(){
+          filterTask(status){
             let self = this;
+			self.taskStatus = status || self.taskStatus;
             return self.tasks.filter(function (task) {
               return task.status === self.taskStatus
             });
