@@ -156,10 +156,10 @@
           sortTask(){
             this.tasks.sort(function (a, b) {
 
-              if (a.text > b.text) {
+              if (a.title > b.title) {
                 return 1;
               }
-              if (a.text < b.text) {
+              if (a.title < b.title) {
                 return -1;
               }
               return 0;

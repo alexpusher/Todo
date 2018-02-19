@@ -4017,6 +4017,7 @@ process.umask = function() { return 0; };
 				alert(err);
 				return;
 			}
+			
             let task = {
 			  title: this.task.title,
               text: this.task.text,
@@ -4059,10 +4060,10 @@ process.umask = function() { return 0; };
           sortTask(){
             this.tasks.sort(function (a, b) {
 
-              if (a.text > b.text) {
+              if (a.title > b.title) {
                 return 1;
               }
-              if (a.text < b.text) {
+              if (a.title < b.title) {
                 return -1;
               }
               return 0;
