@@ -6,52 +6,52 @@
           <input type="text" placeholder="Input task title" class="taskInput" v-model="task.title" @keyup.enter="addTask()"/>
           <input type="text" placeholder="Input task text" class="taskInput" v-model="task.text" @keyup.enter="addTask()"/>
       </header>
-      <div class="tasks">
-          <div v-show="tasks.length">
-              <div class="task" v-for="(task, taskId) in filteredTasks">
-                  <div class="taskDate">
-                      {{task.title}}
-                  </div>
-                  <textarea
-					  v-if="task.isEdit && task.status != 'completed'"
-					  v-model="task.text"
-					  @keyup.esc="closeEdit(taskId)"
-					  @blur="closeEdit(taskId)"
-					  wrap="hard" name="text" class="editTask"
-                  >
-				  </textarea>
-                  <div v-else v-on:dblclick="editTask(taskId)" :class="{completed: task.status == 'completed'}" class="taskText">
-                      {{task.text}}
-                  </div>
-                  <div class="btns">
-                      <button class="taskButtons " v-on:click="closeTask(taskId)" v-if="task.status != 'completed'">Close</button>
-                      <button class="taskButtons taskButtons_delete" v-on:click="deleteTask(taskId)"></button>
-                  </div>
-              </div>
-          </div>
-          <div v-show="tasks.length">
-              <div class="panel">
-                  <div class="count">
-                      {{ filteredTasks.length }} task
-                  </div>
-                  <div class="btn-wrapper">
-                      <button class="btn btn_all" v-on:click="setFilter('all')">
-                          All
-                      </button>
-                      <button class="btn btn_active" v-on:click="setFilter('launched')">
-                          Active
-                      </button>
-                      <button class="btn btn_done" v-on:click="setFilter('completed')">
-                          Completed
-                      </button>
-                  </div>
-                  <div class="btn-wrapper" v-if="tasks.length">
-                      <button class="btn btn_delete_all" v-on:click="deleteAll()">
-                          Delete all
-                      </button>
-                  </div>
-              </div>
-          </div>
+      <div class="tasks" v-show="tasks.length">
+          
+		  <div class="task" v-for="(task, taskId) in filteredTasks">
+			  <div class="taskDate">
+				  {{task.title}}
+			  </div>
+			  <textarea
+				  v-if="task.isEdit && task.status != 'completed'"
+				  v-model="task.text"
+				  @keyup.esc="closeEdit(taskId)"
+				  @blur="closeEdit(taskId)"
+				  wrap="hard" name="text" class="editTask"
+			  >
+			  </textarea>
+			  <div v-else v-on:dblclick="editTask(taskId)" :class="{completed: task.status == 'completed'}" class="taskText">
+				  {{task.text}}
+			  </div>
+			  <div class="btns">
+				  <button class="taskButtons " v-on:click="closeTask(taskId)" v-if="task.status != 'completed'">Close</button>
+				  <button class="taskButtons taskButtons_delete" v-on:click="deleteTask(taskId)"></button>
+			  </div>
+		  </div>
+          
+          
+		  <div class="panel">
+			  <div class="count">
+				  {{ filteredTasks.length }} task
+			  </div>
+			  <div class="btn-wrapper">
+				  <button class="btn btn_all" v-on:click="setFilter('all')">
+					  All
+				  </button>
+				  <button class="btn btn_active" v-on:click="setFilter('launched')">
+					  Active
+				  </button>
+				  <button class="btn btn_done" v-on:click="setFilter('completed')">
+					  Completed
+				  </button>
+			  </div>
+			  <div class="btn-wrapper" v-if="tasks.length">
+				  <button class="btn btn_delete_all" v-on:click="deleteAll()">
+					  Delete all
+				  </button>
+			  </div>
+		  </div>
+         
       </div>
     </section>
 </template>
@@ -124,9 +124,9 @@
             };
             this.tasks.push(task);
             this.task = {
-					title: '',
-					text: ''
-				};
+			  title: '',
+			  text: ''
+			};
             this.sortTask();
 
           },
@@ -142,7 +142,6 @@
             this.tasks[taskId].isEdit = true;
           },
           closeEdit(taskId){
-            console.log(this.tasks[taskId].text.length);
             if(this.tasks[taskId].text.length <= 0){
               this.deleteTask(taskId);
               return;
