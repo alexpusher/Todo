@@ -3960,6 +3960,7 @@ process.umask = function() { return 0; };
 //
 //
 //
+//
 
     
     const $ = __webpack_require__(337);
@@ -3967,7 +3968,10 @@ process.umask = function() { return 0; };
     /* harmony default export */ __webpack_exports__["a"] = ({
         data(){
             return {
-                inputTask: '',
+                task: {
+					title: '',
+					text: ''
+				},
                 tasks: __WEBPACK_IMPORTED_MODULE_0__components__["a" /* TodoStorage */].getTasks(),
                 taskStatus: 'all'
             };
@@ -3998,16 +4002,34 @@ process.umask = function() { return 0; };
         methods:{
           // Add new task
           addTask(){
-            if(this.inputTask.length <= 0) return;
+			let err = '';
+			
+			if(this.task.title <= 0){
+				err += 'You should specify title of task\n';
+				
+			}
+            if(this.task.text <= 0){
+				err += 'Text can\'t be empty\n';
+				
+			}
+			
+			if(err.length > 0){
+				alert(err);
+				return;
+			}
             let task = {
-              text: this.inputTask,
+			  title: this.task.title,
+              text: this.task.text,
               status: 'launched',
               isEdit: false,
-              date: new Date().toString().split(' ').splice(1,4).join(' ')
+              //date: new Date().toString().split(' ').splice(1,4).join(' ')
 
             };
             this.tasks.push(task);
-            this.inputTask = '';
+            this.task = {
+					title: '',
+					text: ''
+				};
             this.sortTask();
 
           },
@@ -4016,7 +4038,8 @@ process.umask = function() { return 0; };
             this.sortTask();
           },
 		  deleteAll(){
-			this.tasks = [];
+			if(confirm("Are you sure?"))			
+			  this.tasks = [];
 		  },
           editTask(taskId){
             this.tasks[taskId].isEdit = true;
@@ -31062,13 +31085,13 @@ var render = function() {
           {
             name: "model",
             rawName: "v-model",
-            value: _vm.inputTask,
-            expression: "inputTask"
+            value: _vm.task.title,
+            expression: "task.title"
           }
         ],
         staticClass: "taskInput",
-        attrs: { type: "text", placeholder: "Input task" },
-        domProps: { value: _vm.inputTask },
+        attrs: { type: "text", placeholder: "Input task title" },
+        domProps: { value: _vm.task.title },
         on: {
           keyup: function($event) {
             if (
@@ -31083,7 +31106,38 @@ var render = function() {
             if ($event.target.composing) {
               return
             }
-            _vm.inputTask = $event.target.value
+            _vm.$set(_vm.task, "title", $event.target.value)
+          }
+        }
+      }),
+      _vm._v(" "),
+      _c("input", {
+        directives: [
+          {
+            name: "model",
+            rawName: "v-model",
+            value: _vm.task.text,
+            expression: "task.text"
+          }
+        ],
+        staticClass: "taskInput",
+        attrs: { type: "text", placeholder: "Input task text" },
+        domProps: { value: _vm.task.text },
+        on: {
+          keyup: function($event) {
+            if (
+              !("button" in $event) &&
+              _vm._k($event.keyCode, "enter", 13, $event.key)
+            ) {
+              return null
+            }
+            _vm.addTask()
+          },
+          input: function($event) {
+            if ($event.target.composing) {
+              return
+            }
+            _vm.$set(_vm.task, "text", $event.target.value)
           }
         }
       })
@@ -31107,7 +31161,7 @@ var render = function() {
             _c("div", { staticClass: "taskDate" }, [
               _vm._v(
                 "\n                      " +
-                  _vm._s(task.date) +
+                  _vm._s(task.title) +
                   "\n                  "
               )
             ]),

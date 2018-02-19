@@ -3,13 +3,14 @@
       <header class="title">
           <h1>ToDo web application</h1>
 		  
-          <input type="text" placeholder="Input task" class="taskInput" v-model="inputTask" @keyup.enter="addTask()"/>
+          <input type="text" placeholder="Input task title" class="taskInput" v-model="task.title" @keyup.enter="addTask()"/>
+          <input type="text" placeholder="Input task text" class="taskInput" v-model="task.text" @keyup.enter="addTask()"/>
       </header>
       <div class="tasks">
           <div v-show="tasks.length">
               <div class="task" v-for="(task, taskId) in filteredTasks">
                   <div class="taskDate">
-                      {{task.date}}
+                      {{task.title}}
                   </div>
                   <textarea
 					  v-if="task.isEdit && task.status != 'completed'"
@@ -63,7 +64,10 @@
     export default {
         data(){
             return {
-                inputTask: '',
+                task: {
+					title: '',
+					text: ''
+				},
                 tasks: TodoStorage.getTasks(),
                 taskStatus: 'all'
             };
@@ -94,16 +98,35 @@
         methods:{
           // Add new task
           addTask(){
-            if(this.inputTask.length <= 0) return;
+			let err = '';
+			
+			if(this.task.title <= 0){
+				err += 'You should specify title of task\n';
+				
+			}
+            if(this.task.text <= 0){
+				err += 'Text can\'t be empty\n';
+				
+			}
+			
+			if(err.length > 0){
+				alert(err);
+				return;
+			}
+			
             let task = {
-              text: this.inputTask,
+			  title: this.task.title,
+              text: this.task.text,
               status: 'launched',
               isEdit: false,
-              date: new Date().toString().split(' ').splice(1,4).join(' ')
+              //date: new Date().toString().split(' ').splice(1,4).join(' ')
 
             };
             this.tasks.push(task);
-            this.inputTask = '';
+            this.task = {
+					title: '',
+					text: ''
+				};
             this.sortTask();
 
           },
@@ -112,7 +135,8 @@
             this.sortTask();
           },
 		  deleteAll(){
-			this.tasks = [];
+			if(confirm("Are you sure?"))			
+			  this.tasks = [];
 		  },
           editTask(taskId){
             this.tasks[taskId].isEdit = true;
