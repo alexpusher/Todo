@@ -3965,7 +3965,6 @@ process.umask = function() { return 0; };
 //
 //
 //
-//
 
     
     const $ = __webpack_require__(337);
@@ -31149,9 +31148,7 @@ var render = function() {
             _vm.$set(_vm.task, "text", $event.target.value)
           }
         }
-      }),
-      _vm._v(" "),
-      _c("div")
+      })
     ]),
     _vm._v(" "),
     _c(
@@ -31213,7 +31210,12 @@ var render = function() {
                   {
                     staticClass: "taskText",
                     class: { completed: task.status == "completed" },
-                    attrs: { title: "Double click left mouse button for edit" },
+                    attrs: {
+                      title:
+                        task.status == "completed"
+                          ? ""
+                          : "Double click left mouse button for edit"
+                    },
                     on: {
                       dblclick: function($event) {
                         _vm.editTask(taskId)

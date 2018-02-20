@@ -5,7 +5,6 @@
 		  
           <input type="text" placeholder="Input task title" class="taskInput" v-model="task.title" @keyup.enter="addTask()"/>
           <input title="Press enter for add task" type="text" placeholder="Input task text" class="taskInput" v-model="task.text" @keyup.enter="addTask()"/>
-		  <div> </div>
       </header>
       <div class="tasks" v-show="tasks.length">
           
@@ -24,7 +23,7 @@
 			  <div v-else 
 				  v-on:dblclick="editTask(taskId)" 
 				  :class="{completed: task.status == 'completed'}" 
-				  class="taskText" title="Double click left mouse button for edit"
+				  class="taskText" :title="task.status == 'completed' ? '': 'Double click left mouse button for edit'"
 			  >
 				  {{task.text}}
 			  </div>
