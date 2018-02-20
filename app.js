@@ -3961,6 +3961,11 @@ process.umask = function() { return 0; };
 //
 //
 //
+//
+//
+//
+//
+//
 
     
     const $ = __webpack_require__(337);
@@ -4028,9 +4033,9 @@ process.umask = function() { return 0; };
             };
             this.tasks.push(task);
             this.task = {
-					title: '',
-					text: ''
-				};
+			  title: '',
+			  text: ''
+			};
             this.sortTask();
 
           },
@@ -4046,7 +4051,6 @@ process.umask = function() { return 0; };
             this.tasks[taskId].isEdit = true;
           },
           closeEdit(taskId){
-            console.log(this.tasks[taskId].text.length);
             if(this.tasks[taskId].text.length <= 0){
               this.deleteTask(taskId);
               return;
@@ -31122,7 +31126,11 @@ var render = function() {
           }
         ],
         staticClass: "taskInput",
-        attrs: { type: "text", placeholder: "Input task text" },
+        attrs: {
+          title: "Press enter for add task",
+          type: "text",
+          placeholder: "Input task text"
+        },
         domProps: { value: _vm.task.text },
         on: {
           keyup: function($event) {
@@ -31141,30 +31149,29 @@ var render = function() {
             _vm.$set(_vm.task, "text", $event.target.value)
           }
         }
-      })
+      }),
+      _vm._v(" "),
+      _c("div")
     ]),
     _vm._v(" "),
-    _c("div", { staticClass: "tasks" }, [
-      _c(
-        "div",
-        {
-          directives: [
-            {
-              name: "show",
-              rawName: "v-show",
-              value: _vm.tasks.length,
-              expression: "tasks.length"
-            }
-          ]
-        },
+    _c(
+      "div",
+      {
+        directives: [
+          {
+            name: "show",
+            rawName: "v-show",
+            value: _vm.tasks.length,
+            expression: "tasks.length"
+          }
+        ],
+        staticClass: "tasks"
+      },
+      [
         _vm._l(_vm.filteredTasks, function(task, taskId) {
           return _c("div", { staticClass: "task" }, [
             _c("div", { staticClass: "taskDate" }, [
-              _vm._v(
-                "\n                      " +
-                  _vm._s(task.title) +
-                  "\n                  "
-              )
+              _vm._v("\n\t\t\t\t  " + _vm._s(task.title) + "\n\t\t\t  ")
             ]),
             _vm._v(" "),
             task.isEdit && task.status != "completed"
@@ -31206,19 +31213,14 @@ var render = function() {
                   {
                     staticClass: "taskText",
                     class: { completed: task.status == "completed" },
+                    attrs: { title: "Double click left mouse button for edit" },
                     on: {
                       dblclick: function($event) {
                         _vm.editTask(taskId)
                       }
                     }
                   },
-                  [
-                    _vm._v(
-                      "\n                      " +
-                        _vm._s(task.text) +
-                        "\n                  "
-                    )
-                  ]
+                  [_vm._v("\n\t\t\t\t  " + _vm._s(task.text) + "\n\t\t\t  ")]
                 ),
             _vm._v(" "),
             _c("div", { staticClass: "btns" }, [
@@ -31247,108 +31249,78 @@ var render = function() {
               })
             ])
           ])
-        })
-      ),
-      _vm._v(" "),
-      _c(
-        "div",
-        {
-          directives: [
-            {
-              name: "show",
-              rawName: "v-show",
-              value: _vm.tasks.length,
-              expression: "tasks.length"
-            }
-          ]
-        },
-        [
-          _c("div", { staticClass: "panel" }, [
-            _c("div", { staticClass: "count" }, [
-              _vm._v(
-                "\n                      " +
-                  _vm._s(_vm.filteredTasks.length) +
-                  " task\n                  "
-              )
-            ]),
+        }),
+        _vm._v(" "),
+        _c("div", { staticClass: "panel" }, [
+          _c("div", { staticClass: "count" }, [
+            _vm._v(
+              "\n\t\t\t\t  " +
+                _vm._s(_vm.filteredTasks.length) +
+                " task\n\t\t\t  "
+            )
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "btn-wrapper" }, [
+            _c(
+              "button",
+              {
+                staticClass: "btn btn_all",
+                on: {
+                  click: function($event) {
+                    _vm.setFilter("all")
+                  }
+                }
+              },
+              [_vm._v("\n\t\t\t\t\t  All\n\t\t\t\t  ")]
+            ),
             _vm._v(" "),
-            _c("div", { staticClass: "btn-wrapper" }, [
-              _c(
-                "button",
-                {
-                  staticClass: "btn btn_all",
-                  on: {
-                    click: function($event) {
-                      _vm.setFilter("all")
-                    }
+            _c(
+              "button",
+              {
+                staticClass: "btn btn_active",
+                on: {
+                  click: function($event) {
+                    _vm.setFilter("launched")
                   }
-                },
-                [
-                  _vm._v(
-                    "\n                          All\n                      "
-                  )
-                ]
-              ),
-              _vm._v(" "),
-              _c(
-                "button",
-                {
-                  staticClass: "btn btn_active",
-                  on: {
-                    click: function($event) {
-                      _vm.setFilter("launched")
-                    }
-                  }
-                },
-                [
-                  _vm._v(
-                    "\n                          Active\n                      "
-                  )
-                ]
-              ),
-              _vm._v(" "),
-              _c(
-                "button",
-                {
-                  staticClass: "btn btn_done",
-                  on: {
-                    click: function($event) {
-                      _vm.setFilter("completed")
-                    }
-                  }
-                },
-                [
-                  _vm._v(
-                    "\n                          Completed\n                      "
-                  )
-                ]
-              )
-            ]),
+                }
+              },
+              [_vm._v("\n\t\t\t\t\t  Active\n\t\t\t\t  ")]
+            ),
             _vm._v(" "),
-            _vm.tasks.length
-              ? _c("div", { staticClass: "btn-wrapper" }, [
-                  _c(
-                    "button",
-                    {
-                      staticClass: "btn btn_delete_all",
-                      on: {
-                        click: function($event) {
-                          _vm.deleteAll()
-                        }
+            _c(
+              "button",
+              {
+                staticClass: "btn btn_done",
+                on: {
+                  click: function($event) {
+                    _vm.setFilter("completed")
+                  }
+                }
+              },
+              [_vm._v("\n\t\t\t\t\t  Completed\n\t\t\t\t  ")]
+            )
+          ]),
+          _vm._v(" "),
+          _vm.tasks.length
+            ? _c("div", { staticClass: "btn-wrapper" }, [
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn_delete_all",
+                    on: {
+                      click: function($event) {
+                        _vm.deleteAll()
                       }
-                    },
-                    [
-                      _vm._v(
-                        "\n                          Delete all\n                      "
-                      )
-                    ]
-                  )
-                ])
-              : _vm._e()
-          ])
-        ]
-      )
-    ])
+                    }
+                  },
+                  [_vm._v("\n\t\t\t\t\t  Delete all\n\t\t\t\t  ")]
+                )
+              ])
+            : _vm._e()
+        ])
+      ],
+      2
+    )
   ])
 }
 var staticRenderFns = []
